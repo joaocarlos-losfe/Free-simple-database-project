@@ -1,9 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading;
-using System.Timers;
 
 namespace FLDVB
 {
@@ -12,7 +11,10 @@ namespace FLDVB
         private string db_name;
         private string final_db_directory;
         StreamWriter db_insert_info;
-
+        StreamReader db_read_info;
+        
+        List<String> database_in_primary_memory = new List<string>();
+        List<String> relational_table = new List<string>();
 
         public Fldb(string db_name)
         {
@@ -37,6 +39,7 @@ namespace FLDVB
             {
                 using (db_insert_info = File.CreateText(this.final_db_directory))
                 {
+                    //--------db insert---------
                     db_insert_info.WriteLine("table_name: " + table_name);
 
                     if (references == null)
@@ -46,6 +49,7 @@ namespace FLDVB
 
                     db_insert_info.Write("[");
                     db_insert_info.Write("PrmID; ");
+
                     foreach (string collum in collums)
                     {
                         db_insert_info.Write(collum + "; ");
@@ -68,6 +72,35 @@ namespace FLDVB
             }
         }
 
+        public void Insert_values_in_table(string table_name, string[] values)
+        {
+            
+        }
+
+        public void View_table(string table_name)
+        {
+            if(!File.Exists(this.db_name + "\\" + table_name + ".fldb"))
+            {
+                Console.WriteLine("table is not exists");
+            }
+            else
+            {
+                string[] Table = File.ReadAllLines(this.db_name + "\\" + table_name + ".fldb");
+
+                
+                Console.WriteLine("=================show table======================");
+                Console.WriteLine();
+                foreach(string table in Table)
+                {
+                    Console.WriteLine(table);
+                }
+
+                Console.WriteLine("=================================================");
+                Console.WriteLine();
+            }
+
+
+        }
 
     }
 
